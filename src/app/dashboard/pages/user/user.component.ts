@@ -1,7 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { TitleComponent } from '../../../shared/title/title.component';
 import { ActivatedRoute } from '@angular/router';
-import { User } from '../../../interfaces/req-response';
+import {
+  User,
+  UserResponse,
+  UsersResponse,
+} from '../../../interfaces/req-response';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
 import { UsersService } from '@services/users.service';
@@ -9,7 +13,7 @@ import { UsersService } from '@services/users.service';
 @Component({
   standalone: true,
   imports: [TitleComponent],
-  template: `<app-title title="User" />
+  template: `<app-title [title]="titleLabel()" />
 
     @if (user()) {
 
@@ -46,4 +50,14 @@ export default class UserComponent {
   //     })
   //   );
   // }
+
+  public titleLabel = computed(() => {
+    if (this.user()) {
+      return `Información del usuario: ${this.user()?.first_name} ${
+        this.user()?.last_name
+      }`;
+    }
+
+    return 'Información del usuario';
+  });
 }
